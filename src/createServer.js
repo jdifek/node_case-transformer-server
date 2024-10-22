@@ -6,25 +6,25 @@ const createServer = () => {
   return http.createServer((req, res) => {
     const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
 
-    const originalText = url.pathname.slice(1);
-    const targetCase = url.searchParams.get('toCase');
+    const inputText = url.pathname.slice(1); // Переименованная переменная
+    const caseType = url.searchParams.get('toCase'); // Переименованная переменная
 
     const errors = [];
 
-    if (!originalText) {
+    if (!inputText) {
       errors.push({
         message:
           'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
-    if (!targetCase) {
+    if (!caseType) {
       errors.push({
         message:
           '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (
-      !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(targetCase)
+      !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(caseType)
     ) {
       errors.push({
         message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
@@ -38,12 +38,15 @@ const createServer = () => {
       return;
     }
 
-    const { original, convertedText } = convertToCase(originalText, targetCase);
+    const { originalCase, convertedText } = convertToCase(
+      inputText, // Используем переименованную переменную
+      caseType, // Используем переименованную переменную
+    );
 
     const responseBody = {
-      originalCase: original,
-      targetCase: targetCase,
-      originalText: originalText,
+      originalCase: originalCase,
+      targetCase: caseType, // Здесь тоже переименованная переменная
+      originalText: inputText, // Здесь тоже переименованная переменная
       convertedText: convertedText,
     };
 
