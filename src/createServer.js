@@ -39,8 +39,8 @@ const createServer = () => {
     }
 
     const { originalCase, convertedText } = convertToCase(
-      targetCase,
       originalText,
+      targetCase,
     );
 
     const responseBody = {
